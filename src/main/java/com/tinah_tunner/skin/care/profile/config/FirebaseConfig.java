@@ -1,5 +1,6 @@
 package com.tinah_tunner.skin.care.profile.config;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.springframework.context.annotation.Configuration;
@@ -21,11 +22,18 @@ public class FirebaseConfig {
                     getClass().getClassLoader().getResourceAsStream("firebase/serviceAccountKey.json");
 
             if (serviceAccount == null) {
-                throw new RuntimeException("Firebase key not found in resources");
+                System.out.println("Firebase service account key not found; skipping Firebase initialization.");
+                return;
+            }
+
+            byte[] serviceAccountBytes = serviceAccount.readAllBytes();
+            if (serviceAccountBytes.length == 0) {
+                System.out.println("Firebase service account key is empty; skipping Firebase initialization.");
+                return;
             }
 
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setCredentials(GoogleCredentials.fromStream(new ByteArrayInputStream(serviceAccountBytes)))
                     .build();
 
             if (FirebaseApp.getApps().isEmpty()) {
