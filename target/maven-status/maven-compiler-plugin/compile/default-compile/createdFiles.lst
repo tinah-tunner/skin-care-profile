@@ -1,0 +1,9 @@
+com\tinah_tunner\skin\care\profile\model\SensitivityLevel.class
+com\tinah_tunner\skin\care\profile\config\FirebaseConfig.class
+com\tinah_tunner\skin\care\profile\repository\ClientRepository.class
+com\tinah_tunner\skin\care\profile\service\ClientService.class
+com\tinah_tunner\skin\care\profile\controller\ClientController.class
+com\tinah_tunner\skin\care\profile\model\Client.class
+com\tinah_tunner\skin\care\profile\SkinCareProfileApplication.class
+com\tinah_tunner\skin\care\profile\model\AcneLevel.class
+com\tinah_tunner\skin\care\profile\model\SkinType.class
