@@ -20,11 +20,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name = "clients")
 @EntityListeners(AuditingEntityListener.class)
+<<<<<<< HEAD
 @JsonIgnoreProperties(ignoreUnknown = true)
+=======
+@Data
+>>>>>>> 7642097692e08b14c04e22f9a1d2606df58b7bc2
 public class Client {
 
     @Id
