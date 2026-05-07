@@ -1,3 +1,4 @@
+
 package com.tinah_tunner.skin.care.profile.model;
 
 import java.time.LocalDate;
@@ -7,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +24,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "clients")
 @EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Client {
 
     @Id
@@ -29,7 +33,9 @@ public class Client {
 
     // 👤 Personal Info
     private String fullName;
+
     private Integer age;
+
     private String contactDetails;
 
     // 🧴 Skin Profile
@@ -54,19 +60,18 @@ public class Client {
     // 📅 Tracking
     @CreatedDate
     private LocalDate firstConsultationDate;
+
     @LastModifiedDate
     private LocalDate lastUpdatedDate;
-     @CreatedBy
-    private String createdBy;   // who created the record
+
+    @CreatedBy
+    private String createdBy;
 
     @LastModifiedBy
-    private String updatedBy;   // who last updated the record
+    private String updatedBy;
 
-    // Constructors
-    public Client() {}
-
-    public Client(String createdBy) {
-        this.createdBy = createdBy;
+    // EMPTY constructor ONLY
+    public Client() {
     }
 
     // ================= GETTERS & SETTERS =================

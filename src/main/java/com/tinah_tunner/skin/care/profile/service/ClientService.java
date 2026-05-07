@@ -1,12 +1,16 @@
-
 package com.tinah_tunner.skin.care.profile.service;
-
-import com.tinah_tunner.skin.care.profile.model.Client;
-import com.tinah_tunner.skin.care.profile.repository.ClientRepository;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import com.tinah_tunner.skin.care.profile.model.AcneLevel;
+import com.tinah_tunner.skin.care.profile.model.Client;
+import com.tinah_tunner.skin.care.profile.model.SensitivityLevel;
+import com.tinah_tunner.skin.care.profile.model.SkinType;
+import com.tinah_tunner.skin.care.profile.repository.ClientRepository;
 
 @Service
 public class ClientService {
@@ -17,30 +21,32 @@ public class ClientService {
         this.repository = repository;
     }
 
-    // ➕ Create or Save client
+    // CREATE CLIENT
     public Client saveClient(Client client) {
         client.setLastUpdatedDate(LocalDate.now());
         return repository.save(client);
     }
 
-    // 📄 Get all clients
+    // GET ALL CLIENTS
     public List<Client> getAllClients() {
         return repository.findAll();
     }
 
-    // 🔍 Get one client
+    // GET CLIENT BY ID
     public Client getClientById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
     }
 
-    // ❌ Delete client
+    // DELETE CLIENT
     public void deleteClient(Long id) {
-        repository.deleteById(id);
+        Client existing = getClientById(id);
+        repository.delete(existing);
     }
 
-    // ✏️ Update client
+    // FULL UPDATE
     public Client updateClient(Long id, Client updatedClient) {
+
         Client existing = getClientById(id);
 
         existing.setFullName(updatedClient.getFullName());
@@ -54,6 +60,64 @@ public class ClientService {
 
         existing.setAllergies(updatedClient.getAllergies());
         existing.setSkinConditions(updatedClient.getSkinConditions());
+
+        existing.setLastUpdatedDate(LocalDate.now());
+
+        return repository.save(existing);
+    }
+
+    // PARTIAL UPDATE (PATCH)
+    public Client partialUpdateClient(Long id, Map<String, Object> updates) {
+
+        Client existing = getClientById(id);
+
+        updates.forEach((key, value) -> {
+
+            switch (key) {
+
+                case "fullName":
+                    existing.setFullName((String) value);
+                    break;
+
+                case "age":
+                    existing.setAge((Integer) value);
+                    break;
+
+                case "contactDetails":
+                    existing.setContactDetails((String) value);
+                    break;
+
+                case "skinType":
+                    existing.setSkinType(
+                            SkinType.valueOf(value.toString().toUpperCase()));
+                    break;
+
+                case "skinTone":
+                    existing.setSkinTone((String) value);
+                    break;
+
+                case "acneLevel":
+                    existing.setAcneLevel(
+                            AcneLevel.valueOf(value.toString().toUpperCase()));
+                    break;
+
+                case "sensitivityLevel":
+                    existing.setSensitivityLevel(
+                            SensitivityLevel.valueOf(value.toString().toUpperCase()));
+                    break;
+
+                case "allergies":
+                    existing.setAllergies((String) value);
+                    break;
+
+                case "skinConditions":
+                    existing.setSkinConditions((String) value);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Unknown field: " + key);
+            }
+        });
 
         existing.setLastUpdatedDate(LocalDate.now());
 
