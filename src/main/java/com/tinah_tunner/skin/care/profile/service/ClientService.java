@@ -6,10 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.tinah_tunner.skin.care.profile.model.AcneLevel;
-import com.tinah_tunner.skin.care.profile.model.Client;
-import com.tinah_tunner.skin.care.profile.model.SensitivityLevel;
-import com.tinah_tunner.skin.care.profile.model.SkinType;
+import com.tinah_tunner.skin.care.profile.model.*;
 import com.tinah_tunner.skin.care.profile.repository.ClientRepository;
 
 @Service
@@ -21,30 +18,24 @@ public class ClientService {
         this.repository = repository;
     }
 
-    // CREATE CLIENT
     public Client saveClient(Client client) {
         client.setLastUpdatedDate(LocalDate.now());
         return repository.save(client);
     }
 
-    // GET ALL CLIENTS
     public List<Client> getAllClients() {
         return repository.findAll();
     }
 
-    // GET CLIENT BY ID
     public Client getClientById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
     }
 
-    // DELETE CLIENT
     public void deleteClient(Long id) {
-        Client existing = getClientById(id);
-        repository.delete(existing);
+        repository.delete(getClientById(id));
     }
 
-    // FULL UPDATE
     public Client updateClient(Long id, Client updatedClient) {
 
         Client existing = getClientById(id);
@@ -66,7 +57,6 @@ public class ClientService {
         return repository.save(existing);
     }
 
-    // PARTIAL UPDATE (PATCH)
     public Client partialUpdateClient(Long id, Map<String, Object> updates) {
 
         Client existing = getClientById(id);
@@ -75,47 +65,33 @@ public class ClientService {
 
             switch (key) {
 
-                case "fullName":
-                    existing.setFullName((String) value);
-                    break;
+                case "fullName" -> existing.setFullName(value.toString());
 
-                case "age":
-                    existing.setAge((Integer) value);
-                    break;
+                case "age" -> existing.setAge(
+                        Integer.parseInt(value.toString())
+                );
 
-                case "contactDetails":
-                    existing.setContactDetails((String) value);
-                    break;
+                case "contactDetails" -> existing.setContactDetails(value.toString());
 
-                case "skinType":
-                    existing.setSkinType(
-                            SkinType.valueOf(value.toString().toUpperCase()));
-                    break;
+                case "skinType" -> existing.setSkinType(
+                        SkinType.valueOf(value.toString().toUpperCase())
+                );
 
-                case "skinTone":
-                    existing.setSkinTone((String) value);
-                    break;
+                case "skinTone" -> existing.setSkinTone(value.toString());
 
-                case "acneLevel":
-                    existing.setAcneLevel(
-                            AcneLevel.valueOf(value.toString().toUpperCase()));
-                    break;
+                case "acneLevel" -> existing.setAcneLevel(
+                        AcneLevel.valueOf(value.toString().toUpperCase())
+                );
 
-                case "sensitivityLevel":
-                    existing.setSensitivityLevel(
-                            SensitivityLevel.valueOf(value.toString().toUpperCase()));
-                    break;
+                case "sensitivityLevel" -> existing.setSensitivityLevel(
+                        SensitivityLevel.valueOf(value.toString().toUpperCase())
+                );
 
-                case "allergies":
-                    existing.setAllergies((String) value);
-                    break;
+                case "allergies" -> existing.setAllergies(value.toString());
 
-                case "skinConditions":
-                    existing.setSkinConditions((String) value);
-                    break;
+                case "skinConditions" -> existing.setSkinConditions(value.toString());
 
-                default:
-                    throw new IllegalArgumentException("Unknown field: " + key);
+                default -> throw new IllegalArgumentException("Unknown field: " + key);
             }
         });
 

@@ -1,49 +1,37 @@
-
 package com.tinah_tunner.skin.care.profile.model;
 
 import java.time.LocalDate;
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "clients")
-@EntityListeners(AuditingEntityListener.class)
-<<<<<<< HEAD
-@JsonIgnoreProperties(ignoreUnknown = true)
-=======
-@Data
->>>>>>> 7642097692e08b14c04e22f9a1d2606df58b7bc2
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 👤 Personal Info
+    @Column(nullable = false)
     private String fullName;
 
     private Integer age;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     private String contactDetails;
 
-    // 🧴 Skin Profile
     @Enumerated(EnumType.STRING)
     private SkinType skinType;
 
@@ -55,141 +43,22 @@ public class Client {
     @Enumerated(EnumType.STRING)
     private SensitivityLevel sensitivityLevel;
 
-    // ⚠️ Health Info
-    @Column(length = 1000)
     private String allergies;
 
-    @Column(length = 1000)
     private String skinConditions;
 
-    // 📅 Tracking
-    @CreatedDate
-    private LocalDate firstConsultationDate;
+    private LocalDate createdDate;
 
-    @LastModifiedDate
     private LocalDate lastUpdatedDate;
 
-    @CreatedBy
-    private String createdBy;
-
-    @LastModifiedBy
-    private String updatedBy;
-
-    // EMPTY constructor ONLY
-    public Client() {
+    @PrePersist
+    public void onCreate() {
+        this.createdDate = LocalDate.now();
+        this.lastUpdatedDate = LocalDate.now();
     }
 
-    // ================= GETTERS & SETTERS =================
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getContactDetails() {
-        return contactDetails;
-    }
-
-    public void setContactDetails(String contactDetails) {
-        this.contactDetails = contactDetails;
-    }
-
-    public SkinType getSkinType() {
-        return skinType;
-    }
-
-    public void setSkinType(SkinType skinType) {
-        this.skinType = skinType;
-    }
-
-    public String getSkinTone() {
-        return skinTone;
-    }
-
-    public void setSkinTone(String skinTone) {
-        this.skinTone = skinTone;
-    }
-
-    public AcneLevel getAcneLevel() {
-        return acneLevel;
-    }
-
-    public void setAcneLevel(AcneLevel acneLevel) {
-        this.acneLevel = acneLevel;
-    }
-
-    public SensitivityLevel getSensitivityLevel() {
-        return sensitivityLevel;
-    }
-
-    public void setSensitivityLevel(SensitivityLevel sensitivityLevel) {
-        this.sensitivityLevel = sensitivityLevel;
-    }
-
-    public String getAllergies() {
-        return allergies;
-    }
-
-    public void setAllergies(String allergies) {
-        this.allergies = allergies;
-    }
-
-    public String getSkinConditions() {
-        return skinConditions;
-    }
-
-    public void setSkinConditions(String skinConditions) {
-        this.skinConditions = skinConditions;
-    }
-
-    public LocalDate getFirstConsultationDate() {
-        return firstConsultationDate;
-    }
-
-    public void setFirstConsultationDate(LocalDate firstConsultationDate) {
-        this.firstConsultationDate = firstConsultationDate;
-    }
-
-    public LocalDate getLastUpdatedDate() {
-        return lastUpdatedDate;
-    }
-
-    public void setLastUpdatedDate(LocalDate lastUpdatedDate) {
-        this.lastUpdatedDate = lastUpdatedDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
+    @PreUpdate
+    public void onUpdate() {
+        this.lastUpdatedDate = LocalDate.now();
     }
 }
